@@ -1,0 +1,1 @@
+1.flume直接向es里面写数据，flume启动的时候如果报找不到相应的es类，直接将es lib下面的jar包拷贝到flume的lib下面即可
