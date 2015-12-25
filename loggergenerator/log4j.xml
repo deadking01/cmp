@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration>
+
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d - %c -%-4r [%t] %-5p %x - %m%n" />
+		</layout>
+	</appender>
+
+    <appender name="local_file" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="logs/flume.log" />
+        <param name="maxFileSize" value="1000MB" />
+        <param name="Append" value="true" />
+        <param name="MaxBackupIndex" value="10" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss.SSS} [%p]-[%c] %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="avro" class="com.huawei.cmp.flume.logappender.TraceLogFlumeAppender">
+		<param name="Hostname" value="10.179.128.169" />
+		<param name="Port" value="41414" />
+		<param name="timeout" value="100000" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%X{level}|%X{moduleName}|%X{traceID}|%m|%X{appendInfo}|%X{exceptionMessage}| %X{fullInfo} %n" />
+		</layout>
+	</appender>
+
+	<appender name="ASYNC" class="org.apache.log4j.AsyncAppender">
+		<param name="BufferSize" value="128" />
+		<param name="blocking" value="false" />
+		<appender-ref ref="avro" />
+	</appender>
+
+	<root>
+		<priority value="debug" />
+		<appender-ref ref="ASYNC" />
+	<!-- <appender-ref ref="local_file" /> -->
+	</root>
+
+</log4j:configuration>
