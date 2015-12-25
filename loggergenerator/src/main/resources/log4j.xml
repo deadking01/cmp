@@ -32,7 +32,7 @@
 
 	<appender name="ASYNC" class="org.apache.log4j.AsyncAppender">
 		<param name="BufferSize" value="128" />
-		<param name="blocking" value="true" />
+		<param name="blocking" value="false" />
 		<appender-ref ref="avro" />
 	</appender>
 
