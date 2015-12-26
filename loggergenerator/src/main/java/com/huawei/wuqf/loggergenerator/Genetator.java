@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
  * Hello world!
  *
  */
-public class App
+public class Genetator
 {
-    protected static final Logger logger = LoggerFactory.getLogger(App.class);
+    protected static final Logger logger = LoggerFactory.getLogger(Genetator.class);
     
     public static void main(String[] args)
     {
