@@ -6,8 +6,11 @@ package com.huawei.wuqf.esacess;
  */
 public class App 
 {
+    private static ESClient client =new ESClient();
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        client.init();
+        client.createIndex();
+        client.close();
     }
 }
