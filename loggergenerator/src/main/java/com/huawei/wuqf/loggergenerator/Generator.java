@@ -13,15 +13,27 @@ public class Generator
     
     public static void main(String[] args)
     {
-        for (int i = 0; i < 10; i++)
+        int threadCount;
+        final int logsPerThread;
+        if(args==null ||args.length<2)
+        {
+            logsPerThread=1000;
+            threadCount=10;
+        }
+        else
+        {
+            threadCount=Integer.valueOf(args[0]);
+            logsPerThread=Integer.valueOf(args[1]);
+        }
+        for (int i = 0; i < threadCount; i++)
         {
             new Thread(new Runnable()
             {
                 public void run()
                 {
-                    for (int j = 0; j < 100000000; j++)
+                    for (int j = 0; j < logsPerThread; j++)
                     {
-                        logger.debug("j is "+j);
+                        logger.debug("thread name is "+Thread.currentThread().getName()+" .j is "+j);
                         try
                         {
                             Thread.sleep(1000);
@@ -32,7 +44,7 @@ public class Generator
                         }
                     }
                 }
-            }).start();
+            },String.valueOf(i)).start();
         }
     }
 }

@@ -19,11 +19,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ESClient implements IESclient
 {
-    private Client client;
+    private static Client client=null;
     
-    public void init(String ip,int port)
+    private static ESClient esClient = new ESClient();
+    
+    private ESClient()
     {
-        client = new TransportClient().addTransportAddress(new InetSocketTransportAddress(ip,port));
+    };
+    
+    public static ESClient getInstance(String ip, int port)
+    {
+        if (client == null)
+        {
+            client = new TransportClient().addTransportAddress(new InetSocketTransportAddress(ip, port));
+        }
+        return esClient;
     }
     
     public void close()
@@ -31,43 +41,43 @@ public class ESClient implements IESclient
         client.close();
     }
     
-    public boolean createIndex(String indexName,String typeName)
+    public boolean createIndex(String indexName, String typeName)
     {
         ObjectMapper mapper = new ObjectMapper();
         for (int i = 0; i < 1000; i++)
         {
-            User user=new User();
-            user.setName("name for "+i);
-            user.setAge(i%100);
-            client.prepareIndex(indexName,typeName).setSource(user.getJsonString(mapper)).execute().actionGet();
+            User user = new User();
+            user.setName("name for " + i);
+            user.setAge(i % 100);
+            client.prepareIndex(indexName, typeName).setSource(user.getJsonString(mapper)).execute().actionGet();
         }
         return true;
     }
-
+    
     public ActionFuture<CountResponse> count(CountRequest request)
     {
         // TODO Auto-generated method stub
         return null;
     }
-
+    
     public ActionFuture<GetResponse> get(GetRequest request)
     {
         // TODO Auto-generated method stub
         return null;
     }
-
+    
     public ActionFuture<SearchResponse> search(SearchRequest request)
     {
         // TODO Auto-generated method stub
         return null;
     }
-
+    
     public ActionFuture<UpdateResponse> update(UpdateRequest request)
     {
         // TODO Auto-generated method stub
         return null;
     }
-
+    
     public ActionFuture<DeleteResponse> delete(DeleteRequest request)
     {
         // TODO Auto-generated method stub

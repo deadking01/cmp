@@ -4,12 +4,11 @@ package com.huawei.wuqf.esacess;
  * Hello world!
  *
  */
-public class App 
+public class ESClientTest 
 {
-    private static ESClient client =new ESClient();
+    private static  ESClient client =ESClient.getInstance("115.28.232.175", 9300);
     public static void main( String[] args )
     {
-        client.init("115.28.232.175", 9300);
         client.createIndex("users","user");
         client.close();
     }
