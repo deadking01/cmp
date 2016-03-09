@@ -11,8 +11,8 @@
 	</appender>
 
 	<appender name="local_file" class="org.apache.log4j.RollingFileAppender">
-		<param name="File" value="logs/flume.log" />
-		<param name="maxFileSize" value="1000MB" />
+		<param name="File" value="logs/source.log" />
+		<param name="maxFileSize" value="100MB" />
 		<param name="Append" value="true" />
 		<param name="MaxBackupIndex" value="10" />
 		<layout class="org.apache.log4j.PatternLayout">
@@ -23,7 +23,7 @@
 
 	<appender name="avro"
 		class="org.apache.flume.clients.log4jappender.Log4jAppender">
-		<param name="Hostname" value="115.28.232.175" />
+		<param name="Hostname" value="192.168.2.106" />
 		<param name="Port" value="4141" />
 		<param name="timeout" value="100000" />
 		<layout class="org.apache.log4j.PatternLayout">
@@ -40,7 +40,7 @@
 
 	<root>
 		<priority value="debug" />
-		<!--appender-ref ref="ASYNC" /-->
+		<appender-ref ref="ASYNC" />
 		<appender-ref ref="local_file" />
 		<appender-ref ref="CONSOLE" />
 	</root>

@@ -15,15 +15,18 @@ public class Generator
     {
         int threadCount;
         final int logsPerThread;
-        if(args==null ||args.length<2)
+        final int timeGap;
+        if(args==null ||args.length<3)
         {
             logsPerThread=1000;
             threadCount=10;
+            timeGap=100;
         }
         else
         {
             threadCount=Integer.valueOf(args[0]);
             logsPerThread=Integer.valueOf(args[1]);
+            timeGap=Integer.valueOf(args[2]);
         }
         for (int i = 0; i < threadCount; i++)
         {
@@ -36,7 +39,7 @@ public class Generator
                         logger.debug("thread name is "+Thread.currentThread().getName()+" .j is "+j);
                         try
                         {
-                            Thread.sleep(1000);
+                            Thread.sleep(timeGap);
                         }
                         catch (InterruptedException e)
                         {
