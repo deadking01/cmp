@@ -30,35 +30,18 @@ public class HbaseClient implements IHbaseClient {
     }
 
     private static HbaseClient client = new HbaseClient();
-    static final String tableName = "wuqf";
-
-    static final String rowKey1 = "rowKey1";
-    static final String rowKey2 = "rowKey2";
-    static final String[] rowKeys = {"rowKey1", "rowKey2", "rowKey3"};
-
-    static String column1 = "column1";
-    static String column2 = "column2";
-    static String column3 = "column3";
-
-//    static String column1 = "columnFamily1:column1";
-//    static String column2 = "columnFamily1:column2";
-//    static String column3 = "columnFamily1:column3";
-
-    static String value1 = "value1";
-    static String value2 = "value2";
-    static String value3 = "value3";
 
     public static void main(String[] args) throws IOException {
         HBaseAdmin hBaseAdmin = new HBaseAdmin(configuration);
-        client.dropTable(hBaseAdmin, tableName);
-        client.createTable(hBaseAdmin, tableName);
-        client.insertData(tableName);
-        client.queryAll(tableName);
-        client.queryByRowKey(tableName);
-        client.queryByColumnValue(tableName);
-        client.queryByFilters(tableName);
-        client.deleteByCondition(tableName, rowKey1);
-        client.deleteRow(tableName, rowKey2);
+        client.dropTable(hBaseAdmin, Constant.tableName);
+        client.createTable(hBaseAdmin, Constant.tableName);
+        client.insertData(Constant.tableName);
+        client.queryAll(Constant.tableName);
+        client.queryByRowKey(Constant.tableName);
+        client.queryByColumnValue(Constant.tableName);
+        client.queryByFilters(Constant.tableName);
+        client.deleteByCondition(Constant.tableName, Constant.rowKey1);
+        client.deleteRow(Constant.tableName, Constant.rowKey2);
         //client.dropTable(hBaseAdmin,tableName);
     }
 
@@ -73,9 +56,9 @@ public class HbaseClient implements IHbaseClient {
 
 
         HTableDescriptor descriptor = new HTableDescriptor(tableName);
-        descriptor.addFamily(new HColumnDescriptor(column1));
-        descriptor.addFamily(new HColumnDescriptor(column2));
-        descriptor.addFamily(new HColumnDescriptor(column3));
+        descriptor.addFamily(new HColumnDescriptor(Constant.columnFamily1));
+        descriptor.addFamily(new HColumnDescriptor(Constant.columnFamily2));
+        descriptor.addFamily(new HColumnDescriptor(Constant.columnFamily3));
         hBaseAdmin.createTable(descriptor);
     }
 
@@ -83,11 +66,11 @@ public class HbaseClient implements IHbaseClient {
         HConnection hconnection = HConnectionManager.createConnection(configuration);
         HTableInterface hTableInterface = hconnection.getTable(tableName);
 
-        for (String rowKey : rowKeys) {
+        for (String rowKey : Constant.rowKeys) {
             Put put = new Put(rowKey.getBytes());
-            put.addColumn(column1.getBytes(), null, value1.getBytes());
-            put.addColumn(column2.getBytes(), null, value2.getBytes());
-            put.addColumn(column3.getBytes(), null, value3.getBytes());
+            put.addColumn(Constant.columnFamily1.getBytes(), Constant.column1.getBytes(), Constant.value1.getBytes());
+            put.addColumn(Constant.columnFamily2.getBytes(), Constant.column2.getBytes(), Constant.value2.getBytes());
+            put.addColumn(Constant.columnFamily3.getBytes(), Constant.column3.getBytes(), Constant.value3.getBytes());
             hTableInterface.put(put);
         }
 
@@ -105,9 +88,9 @@ public class HbaseClient implements IHbaseClient {
 
     public void deleteRow(String tablename, String rowkey) throws IOException {
         HConnection hconnection = HConnectionManager.createConnection(configuration);
-        HTableInterface hTableInterface = hconnection.getTable(tableName);
+        HTableInterface hTableInterface = hconnection.getTable(Constant.tableName);
         List list = new ArrayList();
-        Delete d1 = new Delete(rowKey1.getBytes());
+        Delete d1 = new Delete(Constant.rowKey1.getBytes());
         list.add(d1);
         hTableInterface.delete(list);
         hconnection.close();
@@ -121,12 +104,7 @@ public class HbaseClient implements IHbaseClient {
         HConnection hConnection = HConnectionManager.createConnection(configuration);
         HTableInterface hTableInterface = hConnection.getTable(tableName);
         ResultScanner resultScanner = hTableInterface.getScanner(new Scan());
-        for (Result result : resultScanner) {
-            System.out.println(new String(result.getRow()));
-            for (KeyValue keyValue : result.raw()) {
-                System.out.println("row is " + new String(result.getRow()) + " . column is " + new String(keyValue.getFamily()) + " . value is " + new String(keyValue.getValue()));
-            }
-        }
+        Utils.traversalResultScanner(resultScanner);
         resultScanner.close();
     }
 
@@ -134,66 +112,54 @@ public class HbaseClient implements IHbaseClient {
         System.out.println("----------------queryByRowKey------------------");
         HConnection hConnection = HConnectionManager.createConnection(configuration);
         HTableInterface hTableInterface = hConnection.getTable(tableName);
-        Get get = new Get(rowKey1.getBytes());
+        Get get = new Get(Constant.rowKey1.getBytes());
         Result result = hTableInterface.get(get);
         System.out.println();
-        for (KeyValue keyValue : result.raw()) {
-            System.out.println("row is " + new String(result.getRow()) + " . column is " + new String(keyValue.getFamily()) + " . value is " + new String(keyValue.getValue()));
-        }
+        Utils.traversalResult(result);
     }
 
     public void queryByColumnValue(String tableName) throws IOException {
         System.out.println("----------------queryByColumnValue------------------");
         HConnection hConnection = HConnectionManager.createConnection(configuration);
         HTableInterface hTableInterface = hConnection.getTable(tableName);
-        Filter filter = new SingleColumnValueFilter(Bytes.toBytes(column1), null, CompareFilter.CompareOp.EQUAL, Bytes.toBytes(value1));
+        Filter filter = new SingleColumnValueFilter(Bytes.toBytes(Constant.columnFamily1), null, CompareFilter.CompareOp.EQUAL, Bytes.toBytes(Constant.value1));
         Scan scan = new Scan();
         scan.setFilter(filter);
         ResultScanner resultScanner = hTableInterface.getScanner(scan);
 
-        for (Result result : resultScanner) {
-            System.out.println(new String(result.getRow()));
-            for (KeyValue keyValue : result.raw()) {
-                System.out.println("row is " + new String(result.getRow()) + " . column is " + new String(keyValue.getFamily()) + " . value is " + new String(keyValue.getValue()));
-            }
-        }
+        Utils.traversalResultScanner(resultScanner);
         resultScanner.close();
     }
 
-    public void queryByFilters(String tableName) throws IOException{
+    public void queryByFilters(String tableName) throws IOException {
         System.out.println("----------------queryByFilters------------------");
         HConnection hConnection = HConnectionManager.createConnection(configuration);
         HTableInterface hTableInterface = hConnection.getTable(tableName);
-FilterList filterList=createFilterList();
+        FilterList filterList = createFilterList();
 
         Scan scan = new Scan();
         scan.setFilter(filterList);
         ResultScanner resultScanner = hTableInterface.getScanner(scan);
-
-        for (Result result : resultScanner) {
-            System.out.println(new String(result.getRow()));
-            for (KeyValue keyValue : result.raw()) {
-                System.out.println("row is " + new String(result.getRow()) + " . column is " + new String(keyValue.getFamily()) + " . value is " + new String(keyValue.getValue()));
-            }
-        }
+        Utils.traversalResultScanner(resultScanner);
         resultScanner.close();
     }
-    private FilterList createFilterList(){
-        List<Filter> filters = new ArrayList<Filter>();
+
+    private FilterList createFilterList() {
+        List<Filter> filters = new ArrayList();
 
         Filter filter1 = new SingleColumnValueFilter(Bytes
-                .toBytes(column1), null, CompareFilter.CompareOp.EQUAL, Bytes
-                .toBytes(value1));
+                .toBytes(Constant.columnFamily1), null, CompareFilter.CompareOp.EQUAL, Bytes
+                .toBytes(Constant.value1));
         filters.add(filter1);
 
         Filter filter2 = new SingleColumnValueFilter(Bytes
-                .toBytes(column2), null, CompareFilter.CompareOp.EQUAL, Bytes
-                .toBytes(value2));
+                .toBytes(Constant.columnFamily2), null, CompareFilter.CompareOp.EQUAL, Bytes
+                .toBytes(Constant.value2));
         filters.add(filter2);
 
         Filter filter3 = new SingleColumnValueFilter(Bytes
-                .toBytes(column3), null, CompareFilter.CompareOp.EQUAL, Bytes
-                .toBytes(value3));
+                .toBytes(Constant.columnFamily3), null, CompareFilter.CompareOp.EQUAL, Bytes
+                .toBytes(Constant.value3));
         boolean add;
         if (filters.add(filter3)) add = true;
         else add = false;
