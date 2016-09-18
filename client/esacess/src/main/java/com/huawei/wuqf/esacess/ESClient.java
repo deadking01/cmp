@@ -20,6 +20,8 @@ import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 
 public class ESClient implements IESclient {
@@ -28,14 +30,16 @@ public class ESClient implements IESclient {
 
     public static void main(String[] args) throws IOException {
         ESClient esClient = new ESClient();
-        esClient.init("localhost", 9300);
+        esClient.init("127.0.0.1", 9300);
         esClient.createIndex("users", "user");
         esClient.close();
     }
 
-    public void init(String ip, int port) {
-        client = TransportClient.builder()
-                .addTransportAddress(new InetSocketTransportAddress(ip, port));
+    public void init(String ip, int port) throws UnknownHostException{
+
+        client = TransportClient.builder().build()
+                .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(ip), port));
+
 
     }
 
@@ -45,8 +49,8 @@ public class ESClient implements IESclient {
 
     public boolean createIndex(String indexName, String typeName) throws IOException {
         for (int i = 0; i < 1000; i++) {
-            User user;
-            user = new User();
+            User user = new User();
+            user.setId(i);
             user.setName("name for " + i);
             user.setAge(i % 100);
             client.prepareIndex(indexName, typeName).setSource(generateJson(user)).execute().actionGet();
