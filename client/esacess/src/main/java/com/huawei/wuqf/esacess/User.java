@@ -9,13 +9,13 @@ import lombok.Data;
 public class User
 {
     private String name;
-    
+
     private String id;
-    
+
     private int age;
-    
-    
-    
+
+
+
     public String getJsonString(ObjectMapper mapper)
     {
         String js = null;

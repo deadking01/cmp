@@ -1,5 +1,6 @@
 package com.huawei.wuqf.esacess;
 
+
 import org.elasticsearch.action.ActionFuture;
 import org.elasticsearch.action.count.CountRequest;
 import org.elasticsearch.action.count.CountResponse;
@@ -12,9 +13,11 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 
+import java.io.IOException;
+
 public interface IESclient
 {
-    public boolean createIndex(String indexName, String typeName);
+    public boolean createIndex(String indexName, String typeName) throws IOException;
     
     public ActionFuture<CountResponse> count(CountRequest request);
     
