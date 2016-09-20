@@ -1,8 +1,6 @@
 package com.huawei.wuqf.esacess;
 
 
-
-
 import org.elasticsearch.action.ActionFuture;
 import org.elasticsearch.action.count.CountRequest;
 import org.elasticsearch.action.count.CountResponse;
@@ -35,7 +33,7 @@ public class ESClient implements IESclient {
         esClient.close();
     }
 
-    public void init(String ip, int port) throws UnknownHostException{
+    public void init(String ip, int port) throws UnknownHostException {
 
         client = TransportClient.builder().build()
                 .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(ip), port));
@@ -53,7 +51,8 @@ public class ESClient implements IESclient {
             user.setId(i);
             user.setName("name for " + i);
             user.setAge(i % 100);
-            client.prepareIndex(indexName, typeName).setSource(generateJson(user)).execute().actionGet();
+            XContentBuilder userJson = generateJson(user);
+            client.prepareIndex(indexName, typeName).setSource(userJson).execute().actionGet();
         }
         return true;
     }
@@ -78,13 +77,13 @@ public class ESClient implements IESclient {
         return null;
     }
 
-    private String generateJson(User user) throws IOException {
-        String json = "";
-        XContentBuilder contentBuilder = XContentFactory.jsonBuilder().startObject();
-        contentBuilder.field("id", user.getId());
-        contentBuilder.field("age", user.getAge());
-        contentBuilder.field("name", user.getName());
-        return json;
+    private XContentBuilder generateJson(User user) throws IOException {
+        XContentBuilder doc = XContentFactory.jsonBuilder().startObject();
+        doc.field("id", user.getId());
+        doc.field("age", user.getAge());
+        doc.field("name", user.getName());
+        doc.endObject();
+        return doc;
     }
 
 }

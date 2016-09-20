@@ -1,11 +1,6 @@
 package com.huawei.wuqf.esacess;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.Data;
-
-@Data
+//@Data
 public class User
 {
     private String name;
@@ -14,19 +9,41 @@ public class User
 
     private int age;
 
-
-
-    public String getJsonString(ObjectMapper mapper)
-    {
-        String js = null;
-        try
-        {
-            js = mapper.writeValueAsString(this);
-        }
-        catch (JsonProcessingException e)
-        {
-            e.printStackTrace();
-        }
-        return js;
+    public String getName() {
+        return name;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+//
+//    public String getJsonString(ObjectMapper mapper)
+//    {
+//        String js = null;
+//        try
+//        {
+//            js = mapper.writeValueAsString(this);
+//        }
+//        catch (JsonProcessingException e)
+//        {
+//            e.printStackTrace();
+//        }
+//        return js;
+//    }
 }
