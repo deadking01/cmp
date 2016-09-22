@@ -8,16 +8,18 @@ import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface IESclient
 {
-    public boolean createIndex(String indexName, String typeName) throws IOException;
+    public List<IndexResponse> createIndex(String indexName, String typeName) throws IOException;
     
     public ActionFuture<CountResponse> count(CountRequest request);
     

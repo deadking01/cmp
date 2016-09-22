@@ -1,13 +1,14 @@
 package com.huawei.wuqf.esacess;
 
 //@Data
-public class User
-{
+public class User {
     private String name;
 
     private int id;
 
     private int age;
+
+    private String description;
 
     public String getName() {
         return name;
@@ -33,6 +34,15 @@ public class User
         this.age = age;
     }
 //
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
 //    public String getJsonString(ObjectMapper mapper)
 //    {
 //        String js = null;

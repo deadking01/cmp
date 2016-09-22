@@ -2,12 +2,16 @@ package com.huawei.wuqf.esacess;
 
 
 import org.elasticsearch.action.ActionFuture;
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.count.CountRequest;
 import org.elasticsearch.action.count.CountResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.index.IndexRequestBuilder;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
@@ -20,6 +24,8 @@ import org.elasticsearch.common.xcontent.XContentFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ESClient implements IESclient {
@@ -29,7 +35,11 @@ public class ESClient implements IESclient {
     public static void main(String[] args) throws IOException {
         ESClient esClient = new ESClient();
         esClient.init("127.0.0.1", 9300);
-        esClient.createIndex("users", "user");
+        long startTime = System.currentTimeMillis();
+//        esClient.createIndex("users", "user");
+        esClient.bulkIndex("users", "user");
+        long endTime = System.currentTimeMillis();
+        System.out.println(endTime - startTime);
         esClient.close();
     }
 
@@ -37,28 +47,28 @@ public class ESClient implements IESclient {
 
         client = TransportClient.builder().build()
                 .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(ip), port));
-
-
     }
 
     public void close() {
         client.close();
     }
 
-    public boolean createIndex(String indexName, String typeName) throws IOException {
-        for (int i = 0; i < 1000; i++) {
-            User user = new User();
-            user.setId(i);
-            user.setName("name for " + i);
-            user.setAge(i % 100);
+    public List<IndexResponse> createIndex(String indexName, String typeName) throws IOException {
+        List<IndexResponse> results = new ArrayList();
+        for (int i = 0; i < Constant.dataCount; i++) {
+            User user = createUser(i, "names for " + i, i % Constant.dataCount, Constant.descriptions[i % 3]);
+
             XContentBuilder userJson = generateJson(user);
-            client.prepareIndex(indexName, typeName).setSource(userJson).execute().actionGet();
+            IndexResponse result = client.prepareIndex(indexName, typeName).setSource(userJson).execute().actionGet();
+            results.add(result);
         }
-        return true;
+        return results;
     }
 
     public ActionFuture<CountResponse> count(CountRequest request) {
-        return null;
+
+        ActionFuture<CountResponse> response = client.count(request);
+        return response;
     }
 
     public ActionFuture<GetResponse> get(GetRequest request) {
@@ -67,6 +77,18 @@ public class ESClient implements IESclient {
 
     public ActionFuture<SearchResponse> search(SearchRequest request) {
         return null;
+    }
+
+    public BulkResponse bulkIndex(String indexName, String typeName) throws IOException {
+        BulkRequestBuilder bulkRequest = client.prepareBulk();
+        for (int i = 0; i < Constant.dataCount; i++) {
+            User user = createUser(i, "names for " + i, i % Constant.dataCount, Constant.descriptions[i % 3]);
+            XContentBuilder userJson = generateJson(user);
+            IndexRequestBuilder indexRequestBuilder = client.prepareIndex(indexName, typeName).setSource(userJson);
+            bulkRequest.add(indexRequestBuilder);
+        }
+        BulkResponse bulkResponse = bulkRequest.execute().actionGet();
+        return bulkResponse;
     }
 
     public ActionFuture<UpdateResponse> update(UpdateRequest request) {
@@ -82,8 +104,18 @@ public class ESClient implements IESclient {
         doc.field("id", user.getId());
         doc.field("age", user.getAge());
         doc.field("name", user.getName());
+        doc.field("description", user.getDescription());
         doc.endObject();
         return doc;
+    }
+
+    private User createUser(int id, String name, int age, String description) {
+        User user = new User();
+        user.setId(id);
+        user.setName(name);
+        user.setAge(age);
+        user.setDescription(description);
+        return user;
     }
 
 }

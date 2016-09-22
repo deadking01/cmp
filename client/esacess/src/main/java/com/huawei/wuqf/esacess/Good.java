@@ -35,4 +35,6 @@ public class Good {
     public void setRegionIds(String[] regionIds) {
         this.regionIds = regionIds;
     }
+
+
 }
