@@ -8,9 +8,11 @@ import java.io.IOException;
  * Created by wuqf on 16-9-13.
  */
 interface IHbaseClient {
-    void createTable(HBaseAdmin hBaseAdmin, String tableName) throws IOException;
+    //void createTable(HBaseAdmin hBaseAdmin, String tableName,List<String> columnFamilyNames) throws IOException;
 
     void insertData(String tableName) throws IOException;
+
+    //void bulkPut(String tablename, String rowkey) throws IOException;
 
     void dropTable(HBaseAdmin hBaseAdmin, String tableName) throws IOException;
 

@@ -2,7 +2,6 @@ package com.huawei.wuqf;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.filter.FilterList;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -15,7 +14,8 @@ import java.util.List;
  * Created by wuqf on 16-9-14.
  */
 public class HbaseSelector implements IHbaseSelector {
-    public static Configuration configuration;
+    private static Configuration configuration;
+    private static HBaseAdmin hBaseAdmin;
 
     static {
         configuration = HBaseConfiguration.create();

@@ -1,6 +1,7 @@
 package com.huawei.wuqf.esacess;
 
 
+import com.huawei.wuqf.ESUser;
 import org.elasticsearch.action.ActionFuture;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -56,7 +57,7 @@ public class ESClient implements IESclient {
     public List<IndexResponse> createIndex(String indexName, String typeName) throws IOException {
         List<IndexResponse> results = new ArrayList();
         for (int i = 0; i < Constant.dataCount; i++) {
-            User user = createUser(i, "names for " + i, i % Constant.dataCount, Constant.descriptions[i % 3]);
+            ESUser user = createUser(i, "names for " + i, i % Constant.dataCount, Constant.descriptions[i % 3]);
 
             XContentBuilder userJson = generateJson(user);
             IndexResponse result = client.prepareIndex(indexName, typeName).setSource(userJson).execute().actionGet();
@@ -82,7 +83,7 @@ public class ESClient implements IESclient {
     public BulkResponse bulkIndex(String indexName, String typeName) throws IOException {
         BulkRequestBuilder bulkRequest = client.prepareBulk();
         for (int i = 0; i < Constant.dataCount; i++) {
-            User user = createUser(i, "names for " + i, i % Constant.dataCount, Constant.descriptions[i % 3]);
+            ESUser user = createUser(i, "names for " + i, i % Constant.dataCount, Constant.descriptions[i % 3]);
             XContentBuilder userJson = generateJson(user);
             IndexRequestBuilder indexRequestBuilder = client.prepareIndex(indexName, typeName).setSource(userJson);
             bulkRequest.add(indexRequestBuilder);
@@ -99,7 +100,7 @@ public class ESClient implements IESclient {
         return null;
     }
 
-    private XContentBuilder generateJson(User user) throws IOException {
+    private XContentBuilder generateJson(ESUser user) throws IOException {
         XContentBuilder doc = XContentFactory.jsonBuilder().startObject();
         doc.field("id", user.getId());
         doc.field("age", user.getAge());
@@ -109,8 +110,8 @@ public class ESClient implements IESclient {
         return doc;
     }
 
-    private User createUser(int id, String name, int age, String description) {
-        User user = new User();
+    private ESUser createUser(int id, String name, int age, String description) {
+        ESUser user = new ESUser();
         user.setId(id);
         user.setName(name);
         user.setAge(age);

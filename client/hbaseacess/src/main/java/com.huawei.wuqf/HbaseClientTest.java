@@ -4,7 +4,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
-import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.filter.CompareFilter;
 import org.apache.hadoop.hbase.filter.Filter;
@@ -19,33 +18,34 @@ import java.util.List;
 /**
  * Created by wuqf on 16-9-13.
  */
-public class HbaseClient implements IHbaseClient {
+public class HbaseClientTest implements IHbaseClient {
 
     public static Configuration configuration;
 
     static {
         configuration = HBaseConfiguration.create();
         configuration.set("hbase.zookeeper.properity.clientPort", "2181");
-        configuration.set("hbase.zookeeper.quorum", "192.168.1.107");
+        configuration.set("hbase.zookeeper.quorum", "localhost");
     }
 
-    private static HbaseClient client = new HbaseClient();
+    private static HbaseClientTest client = new HbaseClientTest();
 
     public static void main(String[] args) throws IOException {
         HBaseAdmin hBaseAdmin = new HBaseAdmin(configuration);
         client.dropTable(hBaseAdmin, Constant.tableName);
-        client.createTable(hBaseAdmin, Constant.tableName);
-        client.insertData(Constant.tableName);
+        client.createTable(hBaseAdmin, Constant.tableName,Constant.columnFamilyNames);
+        //client.insertData(Constant.tableName);
+        client.bulkPut(Constant.tableName,Constant.rowKey1);
         client.queryAll(Constant.tableName);
         client.queryByRowKey(Constant.tableName);
         client.queryByColumnValue(Constant.tableName);
         client.queryByFilters(Constant.tableName);
-        client.deleteByCondition(Constant.tableName, Constant.rowKey1);
-        client.deleteRow(Constant.tableName, Constant.rowKey2);
+        //client.deleteByCondition(Constant.tableName, Constant.rowKey1);
+        //client.deleteRow(Constant.tableName, Constant.rowKey2);
         //client.dropTable(hBaseAdmin,tableName);
     }
 
-    public void createTable(HBaseAdmin hBaseAdmin, final String tableName) throws IOException {
+    public void createTable(HBaseAdmin hBaseAdmin, final String tableName,List<String> columnFamilyNames) throws IOException {
 
 
         boolean isExsits = hBaseAdmin.tableExists(tableName);
@@ -73,8 +73,6 @@ public class HbaseClient implements IHbaseClient {
             put.addColumn(Constant.columnFamily3.getBytes(), Constant.column3.getBytes(), Constant.value3.getBytes());
             hTableInterface.put(put);
         }
-
-
         hconnection.close();
     }
 
@@ -95,6 +93,20 @@ public class HbaseClient implements IHbaseClient {
         hTableInterface.delete(list);
         hconnection.close();
     }
+
+    public void bulkPut(String tablename, String rowkey) throws IOException {
+        HConnection hconnection = HConnectionManager.createConnection(configuration);
+        HTableInterface hTableInterface = hconnection.getTable(Constant.tableName);
+        List list = new ArrayList();
+        for (int i = 0; i < 1000; i++) {
+            Put put = new Put(Constant.rowKey1.getBytes());
+            put.addColumn(Constant.columnFamily1.getBytes(), ("column"+i).getBytes(), ("value"+i).getBytes());
+            list.add(put);
+        }
+        hTableInterface.put(list);
+        hconnection.close();
+    }
+
 
     public void deleteByCondition(String tablename, String rowkey) throws IOException {
 

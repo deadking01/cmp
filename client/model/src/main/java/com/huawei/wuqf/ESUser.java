@@ -1,7 +1,7 @@
-package com.huawei.wuqf.esacess;
+package com.huawei.wuqf;
 
 //@Data
-public class User {
+public class ESUser {
     private String name;
 
     private int id;

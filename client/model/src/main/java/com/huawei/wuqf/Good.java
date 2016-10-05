@@ -1,11 +1,9 @@
-package com.huawei.wuqf.esacess;
+package com.huawei.wuqf;
 
-import lombok.Data;
 
 /**
  * Created by wuqf on 16-9-17.
  */
-@Data
 public class Good {
 
     private Long id;
