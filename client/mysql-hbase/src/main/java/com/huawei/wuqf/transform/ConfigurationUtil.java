@@ -9,7 +9,7 @@ import java.util.Properties;
 public class ConfigurationUtil {
 
     private static Properties props;
-    private static String configPath =System.getProperty("user.dir" )+"/mysql-hbase-transform/src/main/resources/config.properties";
+    private static String configPath =System.getProperty("user.dir" )+"/mysql-hbase/src/main/resources/config.properties";
 
     public static Properties getProps() throws Exception{
 
