@@ -14,7 +14,7 @@
         <module>esacess</module>
         <module>hbaseacess</module>
         <module>zkacess</module>
-        <module>mysql-hbase-transform</module>
+        <module>mysql-hbase</module>
         <module>mysqlacess</module>
     </modules>
 

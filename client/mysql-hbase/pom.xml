@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mysql-hbase-transform</artifactId>
+    <artifactId>mysql-hbase</artifactId>
     <packaging>jar</packaging>
 
     <name>mysql-hbase-transform</name>
