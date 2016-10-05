@@ -24,7 +24,7 @@ public class Transform {
         UserClient userClient = new UserClient(url, userName, password);
 
         Connection conn = userClient.getConn();
-        String sql = "select * from t_userlist limit 1,10";
+        String sql = "select * from t_userlist limit 1,100000";
         List<User> users = userClient.excuteQuery(conn, sql);
         userClient.closeConn(conn);
 
