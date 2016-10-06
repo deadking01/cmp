@@ -13,10 +13,10 @@ import java.util.List;
 /**
  * Created by wuqf on 10/4/16.
  */
-public class HbaseClient<T>  implements IHbaseClient{
+public class HbaseClient<T> implements IHbaseClient {
 
-        private static Configuration configuration;
-        private static HBaseAdmin hBaseAdmin;
+    private static Configuration configuration;
+    private static HBaseAdmin hBaseAdmin;
 
     static {
         configuration = HBaseConfiguration.create();
@@ -24,31 +24,30 @@ public class HbaseClient<T>  implements IHbaseClient{
         configuration.set("hbase.zookeeper.quorum", "192.168.1.3");
         try {
             hBaseAdmin = new HBaseAdmin(configuration);
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
-    public void createTable( String tableName,List<String> columnFamilyNames) throws IOException {
+    public void createTable(String tableName, List<String> columnFamilyNames) throws IOException {
         boolean isExsits = hBaseAdmin.tableExists(tableName);
         if (isExsits) {
             return;
         }
         HTableDescriptor descriptor = new HTableDescriptor(tableName);
-        for(int i=0;i<columnFamilyNames.size();i++) {
+        for (int i = 0; i < columnFamilyNames.size(); i++) {
             descriptor.addFamily(new HColumnDescriptor(columnFamilyNames.get(i)));
         }
         hBaseAdmin.createTable(descriptor);
     }
 
-    public void bulkPut(String tablename, String columnFamilyName,String rowKey,List<T> data) throws IOException {
+    public void bulkPut(String tablename, String columnFamilyName, String rowKey, List<T> data) throws IOException {
         HConnection hconnection = HConnectionManager.createConnection(configuration);
         HTableInterface hTableInterface = hconnection.getTable(tablename);
         List list = new ArrayList();
-        for(int i=0;i<data.size();i++){
-            Put put = new Put((rowKey+i).getBytes());
+        for (int i = 0; i < data.size(); i++) {
+            Put put = new Put((rowKey + i).getBytes());
             put.addColumn(columnFamilyName.getBytes(), ("column").getBytes(), Utils.bean2ByteArray(data.get(i)));
             list.add(put);
         }

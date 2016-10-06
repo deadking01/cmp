@@ -7,7 +7,6 @@ import org.apache.hadoop.hbase.filter.FilterList;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,16 +23,6 @@ public class HbaseSelector implements IHbaseSelector {
     }
 
     private static HbaseSelector selector = new HbaseSelector();
-
-    public static void main(String[] args) throws IOException {
-        selector.selectRowKey(Constant.tableName, Constant.rowKey2);
-        selector.selectRowKeyFalimy(Constant.tableName, Constant.rowKey2, Constant.columnFamily1);
-        selector.selectRowKeyFalimyColumn(Constant.tableName, Constant.rowKey2, Constant.columnFamily1, Constant.column1);
-
-        List<String> arr = new ArrayList();
-        selector.selectFilter(Constant.tableName, arr);
-
-    }
 
     public void selectRowKey(String tableName, String rowKey) throws IOException {
 
