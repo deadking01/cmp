@@ -47,9 +47,9 @@ public class HbaseClient<T>  implements IHbaseClient{
         HConnection hconnection = HConnectionManager.createConnection(configuration);
         HTableInterface hTableInterface = hconnection.getTable(tablename);
         List list = new ArrayList();
-        Put put = new Put(rowKey.getBytes());
         for(int i=0;i<data.size();i++){
-            put.addColumn(columnFamilyName.getBytes(), ("column"+i).getBytes(), Utils.bean2ByteArray(data.get(i)));
+            Put put = new Put((rowKey+i).getBytes());
+            put.addColumn(columnFamilyName.getBytes(), ("column").getBytes(), Utils.bean2ByteArray(data.get(i)));
             list.add(put);
         }
         hTableInterface.put(list);
