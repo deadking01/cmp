@@ -3,15 +3,12 @@ package com.huawei.wuqf;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Scan;
-import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat;
 import org.apache.hadoop.hbase.protobuf.ProtobufUtil;
 import org.apache.hadoop.hbase.protobuf.generated.ClientProtos;
-import org.apache.hadoop.hbase.regionserver.Region;
 import org.apache.hadoop.hbase.util.Base64;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
 /**
@@ -35,15 +32,15 @@ public class Transform {
             String ScanToString = Base64.encodeBytes(proto.toByteArray());
             conf.set(TableInputFormat.SCAN, ScanToString);
 
-            JavaPairRDD<ImmutableBytesWritable, Result> myRDD =
-                    sc.newAPIHadoopRDD(conf, TableInputFormat.class,
-                            ImmutableBytesWritable.class, Region.FlushResult.Result.class);
-            System.out.println(myRDD.count());
+//            JavaPairRDD<ImmutableBytesWritable, Result> myRDD =
+//                    sc.newAPIHadoopRDD(conf, TableInputFormat.class,
+//                            ImmutableBytesWritable.class, Region.FlushResult.Result.class);
+//            System.out.println(myRDD.count());
 
         }
             catch(Exception e){
                 e.printStackTrace();
             }
-        }
+
     }
 }
