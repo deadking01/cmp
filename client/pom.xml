@@ -18,6 +18,8 @@
         <module>mysql-hbase</module>
         <module>mysqlacess</module>
         <module>hbase-spark</module>
+        <module>spark-scala</module>
+        <module>spark-java</module>
     </modules>
 
     <properties>
@@ -33,9 +35,13 @@
             <dependency>
                 <groupId>org.apache.spark</groupId>
                 <artifactId>spark-core_2.10</artifactId>
-                <version>0.9.1</version>
+                <version>${spark.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-sql_2.10</artifactId>
+                <version>${spark.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.hbase</groupId>
                 <artifactId>hbase</artifactId>
