@@ -16,7 +16,7 @@ public class AppTest
 
 {
     public static void main(String[] args){
-        SparkConf conf = new SparkConf().setAppName("appName").set("spark.executor.memory", "300M").setMaster("spark://wuqf-B85M-D2V:7077");
+        SparkConf conf = new SparkConf().setAppName("appName").setMaster("spark://wuqf-B85M-D2V:7077");
         JavaSparkContext sc = new JavaSparkContext(conf);
         List<Integer> data = Arrays.asList(1, 2, 3, 4, 5);
         JavaRDD<Integer> distData = sc.parallelize(data);
