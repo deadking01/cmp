@@ -34,12 +34,12 @@
         <dependencies>
             <dependency>
                 <groupId>org.apache.spark</groupId>
-                <artifactId>spark-core_2.10</artifactId>
+                <artifactId>spark-core_2.11</artifactId>
                 <version>${spark.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.spark</groupId>
-                <artifactId>spark-sql_2.10</artifactId>
+                <artifactId>spark-sql_2.11</artifactId>
                 <version>${spark.version}</version>
             </dependency>
             <dependency>
@@ -88,12 +88,12 @@
     <distributionManagement>
         <snapshotRepository>
             <id>snapshots</id>
-            <url>http://localhost:8081/nexus/content/repositories/snapshots</url>
+            <url>http://localhost:8082/nexus/content/repositories/snapshots</url>
         </snapshotRepository>
 
         <repository>
             <id>releases</id>
-            <url>http://localhost:8081/nexus/content/repositories/releases</url>
+            <url>http://localhost:8082/nexus/content/repositories/releases</url>
         </repository>
     </distributionManagement>
 
