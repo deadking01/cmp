@@ -1,5 +1,6 @@
 package com.huawei.wuqf;
 
+
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
@@ -17,13 +18,14 @@ import java.util.List;
 public final class JavaSparkPi {
 
     public static void main(String[] args) throws Exception {
-        args = new String[]{"10000"};
+        args = new String[]{"100"};
         SparkSession spark = SparkSession
                 .builder()
                 .appName("JavaSparkPi").master("spark://wuqf-B85M-D2V:7077")
                 .getOrCreate();
 
         JavaSparkContext jsc = new JavaSparkContext(spark.sparkContext());
+        jsc.addJar("/home/wuqf/Documents/git/cmp/client/spark-java/target/spark-java-0.0.1-SNAPSHOT.jar");
 
         int slices = (args.length == 1) ? Integer.parseInt(args[0]) : 2;
         int n = 100000 * slices;
